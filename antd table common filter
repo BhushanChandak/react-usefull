@@ -1,0 +1,94 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import "antd/dist/antd.css";
+import "./index.css";
+import { useState } from "react";
+
+import rawData from "./data.js";
+import { Table, Input } from "antd";
+
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "Name",
+    key: "name",
+    render: (text) => <a>{text}</a>
+  },
+  {
+    title: "Company",
+    dataIndex: "Company",
+    key: "company"
+  },
+  {
+    title: "Email",
+    dataIndex: "Email",
+    key: "email"
+  },
+  {
+    title: "City",
+    dataIndex: "City",
+    key: "city"
+  },
+  {
+    title: "Salary",
+    dataIndex: "Salary",
+    key: "Salary"
+  },
+  {
+    title: "Enable",
+    dataIndex: "Enable",
+    key: "enable"
+  },
+  {
+    title: "EnterDate",
+    dataIndex: "EnterDate",
+    key: "enterDate"
+  },
+  {
+    title: "Personal",
+    dataIndex: "Personal",
+    key: "personal"
+  }
+];
+
+const MySearchTable = () => {
+  const [filterTable, setFilterTable] = useState(null);
+  const [baseData] = useState(rawData);
+
+  const onTableSearch = (value) => {
+    // console.log("PASS", { value });
+
+    let filterTable = baseData.filter((o) =>
+      Object.keys(o).some((k) =>
+        String(o[k]).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+
+    setFilterTable(filterTable);
+  };
+  return (
+    <>
+      <div>
+        <Input.Search
+          // style={{ border: "3px solid red", margin: "0 0 10px 0" }}
+          placeholder="Search "
+          enterButton
+          onSearch={onTableSearch}
+        />
+      </div>
+
+      <div style={{ padding: 10 }}>
+        <Table
+          columns={columns}
+          // dataSource={data}
+          dataSource={filterTable === null ? baseData : filterTable}
+          scroll={{
+            x: 1300
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+ReactDOM.render(<MySearchTable />, document.getElementById("container"));
